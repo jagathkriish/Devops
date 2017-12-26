@@ -1,0 +1,10 @@
+sh -> set +x && cf login -a api -u uname -p pwd -o org -s space
+withCredentials([[$class: 'UsernamePasswordMultiBinding',
+                      credentialsId: "$credentialsId",
+                      usernameVariable: 'USERNAME',
+                      passwordVariable: 'PASSWORD']]) {
+        echo "Credential used: $credentialsId"
+        sh "set +x && cf login -a $api -u $env.USERNAME -p '$env.PASSWORD'"
+        
+cf target -o ${CF_ORG} -s ${CF_SPACE}        
+cf push -f cloudfoundry/manifest-${DEPLOY_TO}.yml
